@@ -1,3 +1,4 @@
+using MqttDumper.Common.Exceptions;
 using MqttDumper.Common.Extensions;
 using MqttDumper.Common.Logging;
 using MqttDumper.Common.Models;
@@ -41,21 +42,7 @@ public class MqttDumperService : IMqttDumperService
   public async Task SetupAsync(CancellationToken stoppingToken)
   {
     await _mqttClient.ConnectAsync(_config.GetMqttClientOptions(), stoppingToken);
-
-    var topicConfigs = _config.Subscriptions
-      .Where(x => x.Enabled)
-      .ToList();
-
-    foreach (MqttDumperConfig.Subscription config in topicConfigs)
-    {
-      _logger.LogInformation("Subscribing to topic: {topic}", config.Topic);
-
-      MqttClientSubscribeOptions? mqttSubscribeOptions = _mqttFactory.CreateSubscribeOptionsBuilder()
-        .WithTopicFilter(f => { f.WithTopic(config.Topic); })
-        .Build();
-
-      await _mqttClient.SubscribeAsync(mqttSubscribeOptions, stoppingToken);
-    }
+    await subscribeToTopicsAsync(stoppingToken);
   }
 
   public async Task TickAsync(CancellationToken stoppingToken)
@@ -64,5 +51,30 @@ public class MqttDumperService : IMqttDumperService
       TickIntervalMs = 500;
 
     await _messageHandlerService.TickAsync(stoppingToken);
+  }
+
+  private async Task subscribeToTopicsAsync(CancellationToken stoppingToken)
+  {
+    var enabledTopics = _config.Subscriptions
+      .Where(x => x.Enabled)
+      .ToList();
+
+    if (enabledTopics.Count == 0)
+    {
+      _logger.LogError("No enabled or configured topics found in configuration");
+      throw new MqttDumperException("No enabled or configured topics found in configuration");
+    }
+
+    foreach (MqttDumperConfig.Subscription config in enabledTopics)
+    {
+      _logger.LogInformation("Subscribing to topic: {topic}", config.Topic);
+
+      MqttClientSubscribeOptions? mqttSubscribeOptions = _mqttFactory.CreateSubscribeOptionsBuilder()
+        .WithTopicFilter(f => { f.WithTopic(config.Topic); })
+        .Build();
+
+      await _mqttClient.SubscribeAsync(mqttSubscribeOptions, stoppingToken);
+      _messageHandlerService.RegisterTopicSubscription(config);
+    }
   }
 }
