@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MqttDumper.Common.Logging;
 using MqttDumper.Common.Models;
+using MqttDumper.Common.Services;
 using NLog.Extensions.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -16,10 +17,11 @@ public static class ServiceCollectionExtensions
   {
     return services
       .AddLoggingAndConfig()
-      .AddConfiguration();
+      .AddMqttDumperConfig()
+      .AddSingleton<IMqttMessageHandlerService, MqttMessageHandlerService>();
   }
 
-  private static IServiceCollection AddConfiguration(this IServiceCollection services)
+  private static IServiceCollection AddMqttDumperConfig(this IServiceCollection services)
   {
     var configFilePath = resolveConfigFilePath();
 
