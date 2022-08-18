@@ -32,7 +32,7 @@ public class Worker : BackgroundService
       mqttClient.ApplicationMessageReceivedAsync += e =>
       {
         Console.WriteLine("Received application message.");
-        e.DumpToConsole();
+        // e.DumpToConsole();
 
         return Task.CompletedTask;
       };

@@ -1,6 +1,10 @@
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using MqttDumper.Common.Logging;
 using MqttDumper.Common.Models;
+using NLog.Extensions.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -11,6 +15,7 @@ public static class ServiceCollectionExtensions
   public static IServiceCollection AddMqttDumper(this IServiceCollection services)
   {
     return services
+      .AddLoggingAndConfig()
       .AddConfiguration();
   }
 
@@ -25,6 +30,24 @@ public static class ServiceCollectionExtensions
       .Deserialize<MqttDumperConfig>(File.ReadAllText(configFilePath));
 
     return services.AddSingleton(mqttDumperConfig);
+  }
+
+  private static IServiceCollection AddLoggingAndConfig(this IServiceCollection services)
+  {
+    IConfigurationRoot? config = new ConfigurationBuilder()
+      .AddJsonFile("appsettings.json", optional: true)
+      .Build();
+
+    return services
+      .AddLogging(loggingBuilder =>
+      {
+        // configure Logging with NLog
+        loggingBuilder.ClearProviders();
+        loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+        loggingBuilder.AddNLog(config);
+      })
+      .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
+      .AddSingleton<IConfiguration>(config);
   }
 
   private static string resolveConfigFilePath()
