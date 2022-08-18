@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,7 +18,8 @@ public static class ServiceCollectionExtensions
     return services
       .AddLoggingAndConfig()
       .AddMqttDumperConfig()
-      .AddSingleton<IMqttMessageHandlerService, MqttMessageHandlerService>();
+      .AddSingleton<IMqttDumperService, MqttDumperService>()
+      .AddSingleton<IMessageHandlerService, MessageHandlerService>();
   }
 
   private static IServiceCollection AddMqttDumperConfig(this IServiceCollection services)

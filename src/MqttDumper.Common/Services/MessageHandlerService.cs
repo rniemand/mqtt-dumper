@@ -3,13 +3,13 @@ using System.Text.Json;
 
 namespace MqttDumper.Common.Services;
 
-public interface IMqttMessageHandlerService
+public interface IMessageHandlerService
 {
   Task ProcessAsync(MqttApplicationMessageReceivedEventArgs e);
   Task TickAsync(CancellationToken stoppingToken);
 }
 
-public class MqttMessageHandlerService : IMqttMessageHandlerService
+public class MessageHandlerService : IMessageHandlerService
 {
   private bool _canProcessMessages;
 

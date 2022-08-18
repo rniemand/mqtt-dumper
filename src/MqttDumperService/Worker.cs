@@ -1,55 +1,24 @@
-using MqttDumper.Common.Extensions;
-using MqttDumper.Common.Logging;
-using MqttDumper.Common.Models;
 using MqttDumper.Common.Services;
-using MQTTnet;
-using MQTTnet.Client;
 
 namespace MqttDumperService;
 
 public class Worker : BackgroundService
 {
-  private readonly ILoggerAdapter<Worker> _logger;
-  private readonly IMqttMessageHandlerService _messageHandlerService;
-  private readonly MqttDumperConfig _config;
+  private readonly IMqttDumperService _dumperService;
 
-  public Worker(ILoggerAdapter<Worker> logger,
-    MqttDumperConfig config,
-    IMqttMessageHandlerService messageHandlerService)
+  public Worker(IMqttDumperService dumperService)
   {
-    _logger = logger;
-    _config = config;
-    _messageHandlerService = messageHandlerService;
+    _dumperService = dumperService;
   }
 
   protected override async Task ExecuteAsync(CancellationToken stoppingToken)
   {
-    var mqttFactory = new MqttFactory();
-    using IMqttClient? mqttClient = mqttFactory.CreateMqttClient();
-
-    mqttClient.ApplicationMessageReceivedAsync += _messageHandlerService.ProcessAsync;
-
-    await mqttClient.ConnectAsync(_config.GetMqttClientOptions(), stoppingToken);
-
-    var topicConfigs = _config.Subscriptions
-      .Where(x => x.Enabled)
-      .ToList();
-
-    foreach (MqttDumperConfig.Subscription config in topicConfigs)
-    {
-      _logger.LogInformation("Subscribing to topic: {topic}", config.Topic);
-
-      MqttClientSubscribeOptions? mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
-        .WithTopicFilter(f => { f.WithTopic(config.Topic); })
-        .Build();
-
-      await mqttClient.SubscribeAsync(mqttSubscribeOptions, stoppingToken);
-    }
+    await _dumperService.SetupAsync(stoppingToken);
 
     while (!stoppingToken.IsCancellationRequested)
     {
-      await Task.Delay(1000, stoppingToken);
-      await _messageHandlerService.TickAsync(stoppingToken);
+      await Task.Delay(_dumperService.TickIntervalMs, stoppingToken);
+      await _dumperService.TickAsync(stoppingToken);
     }
   }
 }
