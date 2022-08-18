@@ -35,5 +35,5 @@ Obj/
 *\.crunchsolution\.cache
 *\.executiontimes\.cache
 
-# cron-tool specific files
-CronTool.Local.json
+# MQTT Dumper Specific
+*.machine.yaml
