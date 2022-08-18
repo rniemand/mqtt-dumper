@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using YamlDotNet.Serialization;
 
 namespace MqttDumper.Common.Models;
@@ -6,6 +7,9 @@ public class MqttDumperConfig
 {
   [YamlMember(Alias = "server")]
   public ServerConfig Server { get; set; } = new();
+
+  [YamlMember(Alias = "subscriptions")]
+  public Subscription[] Subscriptions { get; set; } = Array.Empty<Subscription>();
 
   public class ServerConfig
   {
@@ -28,5 +32,15 @@ public class MqttDumperConfig
 
       return !string.IsNullOrWhiteSpace(Password);
     }
+  }
+
+  [DebuggerDisplay("{Topic} ({Enabled})")]
+  public class Subscription
+  {
+    [YamlMember(Alias = "topic")]
+    public string Topic { get; set; } = string.Empty;
+
+    [YamlMember(Alias = "enabled")]
+    public bool Enabled { get; set; } = true;
   }
 }

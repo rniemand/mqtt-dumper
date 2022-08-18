@@ -3,3 +3,9 @@ server:
   port: 123
   user: guest
   pass: pass
+
+subscriptions:
+  - topic: 'homeassistant/#'
+    enabled: false
+  - topic: 'tasmota/#'
+    enabled: false

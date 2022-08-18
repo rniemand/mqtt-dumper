@@ -25,7 +25,7 @@ public class Worker : BackgroundService
     using (IMqttClient? mqttClient = mqttFactory.CreateMqttClient())
     {
       MqttClientOptions mqttClientOptions = _config.GetMqttClientOptions();
-
+      
       // Setup message handling before connecting so that queued messages
       // are also handled properly. When there is no event handler attached all
       // received messages get lost.
@@ -39,12 +39,22 @@ public class Worker : BackgroundService
 
       await mqttClient.ConnectAsync(mqttClientOptions, stoppingToken);
 
-      MqttClientSubscribeOptions? mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
-        .WithTopicFilter(f => { f.WithTopic("#"); })
-        .Build();
 
-      await mqttClient.SubscribeAsync(mqttSubscribeOptions, stoppingToken);
+      var topicConfigs = _config.Subscriptions
+        .Where(x => x.Enabled)
+        .ToList();
 
+      foreach (MqttDumperConfig.Subscription config in topicConfigs)
+      {
+        _logger.LogInformation("Subscribing to topic: {topic}", config.Topic);
+
+        MqttClientSubscribeOptions? mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
+          .WithTopicFilter(f => { f.WithTopic(config.Topic); })
+          .Build();
+
+        await mqttClient.SubscribeAsync(mqttSubscribeOptions, stoppingToken);
+      }
+      
       Console.WriteLine("MQTT client subscribed to topic.");
       Console.WriteLine("Press enter to exit.");
       Console.ReadLine();
