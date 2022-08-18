@@ -1,3 +1,5 @@
 server:
   host: test
   port: 123
+  user: guest
+  pass: pass
