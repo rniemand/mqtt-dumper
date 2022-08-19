@@ -4,6 +4,8 @@ server:
   user: guest
   pass: pass
 
+db_connection_string: "Server=127.0.0.1;Uid=mqttdumper;Pwd=password;Database=MqttDumper;Allow User Variables=true;SslMode=none"
+
 subscriptions:
   - topic: 'homeassistant/#'
     enabled: false

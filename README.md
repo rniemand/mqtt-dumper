@@ -12,3 +12,5 @@ Simple tool used to dump `MQTT Messages` to a database for debugging \ troublesh
 - YamlDotNet
 - NLog.Extensions.Logging
 - Microsoft.Extensions.Configuration.Json
+- Dapper
+- MySql.Data

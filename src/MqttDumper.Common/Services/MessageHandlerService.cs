@@ -2,6 +2,7 @@ using MqttDumper.Common.Models;
 using MQTTnet.Client;
 using MqttDumper.Common.Logging;
 using MqttDumper.Common.Processors;
+using MqttDumper.Common.Repos;
 using MqttDumper.Common.Utils;
 
 namespace MqttDumper.Common.Services;
@@ -18,12 +19,16 @@ public class MessageHandlerService : IMessageHandlerService
   private readonly ILoggerAdapter<MessageHandlerService> _logger;
   private readonly List<IMessageProcessor> _processors = new();
   private readonly IMqttUtils _mqttUtils;
+  private readonly IRawMessagesRepo _rawMessagesRepo;
   private bool _canProcessMessages=true;
 
-  public MessageHandlerService(ILoggerAdapter<MessageHandlerService> logger, IMqttUtils mqttUtils)
+  public MessageHandlerService(ILoggerAdapter<MessageHandlerService> logger,
+    IMqttUtils mqttUtils,
+    IRawMessagesRepo rawMessagesRepo)
   {
     _logger = logger;
     _mqttUtils = mqttUtils;
+    _rawMessagesRepo = rawMessagesRepo;
   }
 
   // Public methods
@@ -55,6 +60,9 @@ public class MessageHandlerService : IMessageHandlerService
   private async Task runProcessorAsync(IMessageProcessor processor, MqttApplicationMessageReceivedEventArgs message)
   {
     ProcessedMqttMessage processedMessage = _mqttUtils.ProcessMessage(message);
+
+
+    await _rawMessagesRepo.AddAsync(processedMessage);
 
     
     await Task.CompletedTask;

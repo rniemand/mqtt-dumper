@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MqttDumper.Common.Logging;
 using MqttDumper.Common.Models;
+using MqttDumper.Common.Repos;
 using MqttDumper.Common.Services;
 using MqttDumper.Common.Utils;
 using NLog.Extensions.Logging;
@@ -21,6 +22,7 @@ public static class ServiceCollectionExtensions
       .AddMqttDumperConfig()
       .AddSingleton<IMqttDumperService, MqttDumperService>()
       .AddSingleton<IMqttUtils, MqttUtils>()
+      .AddSingleton<IRawMessagesRepo, RawMessagesRepo>()
       .AddSingleton<IMessageHandlerService, MessageHandlerService>();
   }
 

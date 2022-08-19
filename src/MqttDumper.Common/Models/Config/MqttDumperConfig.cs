@@ -11,6 +11,9 @@ public class MqttDumperConfig
   [YamlMember(Alias = "subscriptions")]
   public Subscription[] Subscriptions { get; set; } = Array.Empty<Subscription>();
 
+  [YamlMember(Alias = "db_connection_string")]
+  public string DbConnectionString { get; set; } = string.Empty;
+
   public class ServerConfig
   {
     [YamlMember(Alias = "host")]
