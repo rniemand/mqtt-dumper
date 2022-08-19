@@ -60,11 +60,6 @@ public class MessageHandlerService : IMessageHandlerService
   private async Task runProcessorAsync(IMessageProcessor processor, MqttApplicationMessageReceivedEventArgs message)
   {
     ProcessedMqttMessage processedMessage = _mqttUtils.ProcessMessage(message);
-
-
     await _rawMessagesRepo.AddAsync(processedMessage);
-
-    
-    await Task.CompletedTask;
   }
 }
