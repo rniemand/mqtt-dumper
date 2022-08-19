@@ -1,8 +1,8 @@
 using MqttDumper.Common.Models;
 using MQTTnet.Client;
-using System.Text.Json;
 using MqttDumper.Common.Logging;
 using MqttDumper.Common.Processors;
+using MqttDumper.Common.Utils;
 
 namespace MqttDumper.Common.Services;
 
@@ -17,11 +17,13 @@ public class MessageHandlerService : IMessageHandlerService
 {
   private readonly ILoggerAdapter<MessageHandlerService> _logger;
   private readonly List<IMessageProcessor> _processors = new();
-  private bool _canProcessMessages;
+  private readonly IMqttUtils _mqttUtils;
+  private bool _canProcessMessages=true;
 
-  public MessageHandlerService(ILoggerAdapter<MessageHandlerService> logger)
+  public MessageHandlerService(ILoggerAdapter<MessageHandlerService> logger, IMqttUtils mqttUtils)
   {
     _logger = logger;
+    _mqttUtils = mqttUtils;
   }
 
   // Public methods
@@ -52,28 +54,9 @@ public class MessageHandlerService : IMessageHandlerService
   // Internal methods
   private async Task runProcessorAsync(IMessageProcessor processor, MqttApplicationMessageReceivedEventArgs message)
   {
-    Console.WriteLine("Received application message.");
-    message.DumpToConsole();
+    ProcessedMqttMessage processedMessage = _mqttUtils.ProcessMessage(message);
 
+    
     await Task.CompletedTask;
-  }
-}
-
-
-internal static class ObjectExtensions
-{
-  public static TObject DumpToConsole<TObject>(this TObject @object)
-  {
-    var output = "NULL";
-    if (@object != null)
-    {
-      output = JsonSerializer.Serialize(@object, new JsonSerializerOptions
-      {
-        WriteIndented = true
-      });
-    }
-
-    Console.WriteLine($"[{@object?.GetType().Name}]:\r\n{output}");
-    return @object;
   }
 }

@@ -1,10 +1,11 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MqttDumper.Common.Logging;
 using MqttDumper.Common.Models;
 using MqttDumper.Common.Services;
+using MqttDumper.Common.Utils;
 using NLog.Extensions.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -19,6 +20,7 @@ public static class ServiceCollectionExtensions
       .AddLoggingAndConfig()
       .AddMqttDumperConfig()
       .AddSingleton<IMqttDumperService, MqttDumperService>()
+      .AddSingleton<IMqttUtils, MqttUtils>()
       .AddSingleton<IMessageHandlerService, MessageHandlerService>();
   }
 
