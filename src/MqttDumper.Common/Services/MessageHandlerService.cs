@@ -20,7 +20,7 @@ public class MessageHandlerService : IMessageHandlerService
   private readonly List<IMessageProcessor> _processors = new();
   private readonly IMqttUtils _mqttUtils;
   private readonly IRawMessagesRepo _rawMessagesRepo;
-  private bool _canProcessMessages=true;
+  private bool _canProcessMessages;
 
   public MessageHandlerService(ILoggerAdapter<MessageHandlerService> logger,
     IMqttUtils mqttUtils,
