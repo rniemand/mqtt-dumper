@@ -5,7 +5,15 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttDumperService", "MqttDumperService\MqttDumperService.csproj", "{FB848FA4-A056-4E17-93A6-32FC3AD62940}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttDumper.Common", "MqttDumper.Common\MqttDumper.Common.csproj", "{1B928CC8-FA8F-4701-A539-552214C1AB75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttDumper.Common", "MqttDumper.Common\MqttDumper.Common.csproj", "{1B928CC8-FA8F-4701-A539-552214C1AB75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{67DB4E51-8F81-4FBE-8644-20801A7F5A82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{CB7F3A86-B9BB-4673-A523-52DF0001B871}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8EFDE1F2-1DCA-4BCC-B87F-63F407B03041}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttDumper.Tests", "..\tests\MqttDumper.Tests\MqttDumper.Tests.csproj", "{B3AE9AA6-EC6B-4B10-AD49-671C552C122E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +29,18 @@ Global
 		{1B928CC8-FA8F-4701-A539-552214C1AB75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B928CC8-FA8F-4701-A539-552214C1AB75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B928CC8-FA8F-4701-A539-552214C1AB75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3AE9AA6-EC6B-4B10-AD49-671C552C122E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3AE9AA6-EC6B-4B10-AD49-671C552C122E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3AE9AA6-EC6B-4B10-AD49-671C552C122E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3AE9AA6-EC6B-4B10-AD49-671C552C122E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FB848FA4-A056-4E17-93A6-32FC3AD62940} = {CB7F3A86-B9BB-4673-A523-52DF0001B871}
+		{1B928CC8-FA8F-4701-A539-552214C1AB75} = {67DB4E51-8F81-4FBE-8644-20801A7F5A82}
+		{B3AE9AA6-EC6B-4B10-AD49-671C552C122E} = {8EFDE1F2-1DCA-4BCC-B87F-63F407B03041}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2DE52B86-E91C-4A37-96DA-40C165459277}
